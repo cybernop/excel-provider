@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "excel-provider"
-version = "0.1.0"
+version = "0.1.2"
 description = ""
 authors = ["Alexander Essenwanger <cibernop@mable-anex.de>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/cybernop/excel-provider"
 
 [tool.poetry.dependencies]
 python = "^3.11"
@@ -19,9 +20,7 @@ black = "^24.2"
 pytest = "^8.1.1"
 
 [tool.pytest.ini_options]
-addopts = [
-    "--import-mode=importlib",
-]
+addopts = ["--import-mode=importlib"]
 
 [build-system]
 requires = ["poetry-core"]
