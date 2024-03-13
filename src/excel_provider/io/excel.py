@@ -22,6 +22,21 @@ def read_excel(
             parse_dates=True,
         )
 
-        result[sheet] = df[[data_col]].dropna(subset=[data_col]).to_dict()
+        sheet_result = df[[data_col]].dropna(subset=[data_col]).to_dict()
+
+        # Convert the index to string to avoid issues with JSON serialization
+        sheet_result = {
+            str(k): {_convert_key(vk): kk for vk, kk in v.items()}
+            for k, v in sheet_result.items()
+        }
+
+        result[sheet] = sheet_result
 
     return result
+
+
+def _convert_key(key) -> Any:
+    if isinstance(key, int) or isinstance(key, float) or isinstance(key, bool):
+        return key
+    else:
+        return str(key)
