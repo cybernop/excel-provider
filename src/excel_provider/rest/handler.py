@@ -42,10 +42,16 @@ class RestHandler:
         if self.sheets is None or self.data is None:
             raise ValueError("Data has not been read")
 
-        if sheet := self.sheets.get(sheet_id):
+        if sheet := self._get_sheet_name_by_id(sheet_id):
             return self.data[sheet]
         else:
             raise ValueError(f"Sheet with id {sheet_id} does not exist")
+
+    def _get_sheet_name_by_id(self, sheet_id: str) -> str:
+        for sheet in self.sheets:
+            if sheet["id"] == sheet_id:
+                return sheet["name"]
+        return None
 
     def get_sheet_names(self) -> Dict[str, str]:
         if self.sheets is None:
