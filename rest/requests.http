@@ -1,0 +1,15 @@
+@host = localhost:5000
+
+###
+
+# @name sheets
+GET http://{{host}}/sheets
+
+###
+
+@id = {{sheets.response.body.sheets[0].id}}
+
+GET http://{{host}}/sheet/{{id}}
+
+
+
