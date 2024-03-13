@@ -19,14 +19,14 @@ class RestHandler:
             raise ValueError("Handler config is not valid")
 
         read_config = {
-            "excel_file": Path(self.config["excel_file"]),
+            "file": Path(self.config["excel_file"]),
             "sheets": self.config["sheets"],
             "data_cols": self.config["data_cols"],
             "index_cols": self.config.get("index_cols"),
         }
 
         self.data = read_excel(**read_config)
-        self.sheets = {uuid4(): sheet for sheet in self.data.keys()}
+        self.sheets = {str(uuid4()): sheet for sheet in self.data.keys()}
 
     def config_valid(self) -> bool:
         return (
