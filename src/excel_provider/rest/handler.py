@@ -55,9 +55,9 @@ class RestHandler:
             raise ValueError(f"Sheet with id {sheet_id} does not exist")
 
     def _get_sheet_name_by_id(self, sheet_id: str) -> str:
-        for sheet in self.sheets:
-            if sheet["id"] == sheet_id:
-                return sheet["name"]
+        for id, name in self.sheets.items():
+            if id == sheet_id:
+                return name
         return None
 
     def get_sheet_names(self) -> Dict[str, str]:

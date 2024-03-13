@@ -5,7 +5,7 @@ def test_get_sheet_names():
     handler = RestHandler()
     handler.sheets = {"1": "Sheet1", "2": "Sheet2"}
 
-    assert handler.get_sheet_names() == {"1": "Sheet1", "2": "Sheet2"}
+    assert handler.get_sheet_names() == {"sheets": {"1": "Sheet1", "2": "Sheet2"}}
 
 
 def test_get_sheet_names_no_data():
@@ -27,8 +27,27 @@ def test_get_data():
     }
     handler.sheets = {"1": "Sheet1", "2": "Sheet2"}
 
-    assert handler.get_data("1") == {"Value": {1: 1, 2: 2}}
-    assert handler.get_data("2") == {"Name": {1: "Jane", 2: "John"}}
+    test_data = [
+        (
+            "1",
+            {
+                "id": "1",
+                "name": "Sheet1",
+                "series": [{"name": "Value", "rows": {1: 1, 2: 2}}],
+            },
+        ),
+        (
+            "2",
+            {
+                "id": "2",
+                "name": "Sheet2",
+                "series": [{"name": "Name", "rows": {1: "Jane", 2: "John"}}],
+            },
+        ),
+    ]
+
+    for input, expected in test_data:
+        assert handler.get_data(input) == expected
 
 
 def test_get_data_no_data():

@@ -1,5 +1,3 @@
-from pandas import Timestamp
-
 from excel_provider.io.excel import read_excel
 
 
@@ -16,8 +14,8 @@ def test_read_excel():
 
     assert "Value" in result["Sheet1"]
     assert len(result["Sheet1"]["Value"]) == 3
-    assert Timestamp("2024-01-01") in result["Sheet1"]["Value"]
-    assert result["Sheet1"]["Value"][Timestamp("2024-01-01")] == 1
+    assert "2024-01-01 00:00:00" in result["Sheet1"]["Value"]
+    assert result["Sheet1"]["Value"]["2024-01-01 00:00:00"] == 1
 
     assert "Name" in result["Sheet2"]
     assert len(result["Sheet2"]["Name"]) == 4
