@@ -5,7 +5,7 @@ from excel_provider.io.excel import read_excel
 
 def test_read_excel():
     result = read_excel(
-        "tests/io/data/test.xlsx",
+        "tests/data/test.xlsx",
         sheets=["Sheet1", "Sheet2"],
         data_cols=["Value", "Name"],
     )
