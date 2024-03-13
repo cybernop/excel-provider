@@ -43,7 +43,7 @@ class RestHandler:
             raise ValueError("Data has not been read")
 
         if sheet := self._get_sheet_name_by_id(sheet_id):
-            return self.data[sheet]
+            return {"id": sheet_id, "name": sheet, "entries": self.data[sheet]}
         else:
             raise ValueError(f"Sheet with id {sheet_id} does not exist")
 
