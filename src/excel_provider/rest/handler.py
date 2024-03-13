@@ -26,7 +26,9 @@ class RestHandler:
         }
 
         self.data = read_excel(**read_config)
-        self.sheets = {str(uuid4()): sheet for sheet in self.data.keys()}
+        self.sheets = [
+            {"id": str(uuid4()), "name": sheet} for sheet in self.data.keys()
+        ]
 
     def config_valid(self) -> bool:
         return (
@@ -49,4 +51,4 @@ class RestHandler:
         if self.sheets is None:
             raise ValueError("Data has not been read")
 
-        return self.sheets
+        return {"sheets": self.sheets}
