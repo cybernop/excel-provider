@@ -11,5 +11,9 @@ GET http://{{host}}/sheets
 
 GET http://{{host}}/sheet/{{id}}
 
+###
+
+POST http://{{host}}/refresh
+
 
 

@@ -19,6 +19,14 @@ def create_app(config: Dict):
 
     @app.route("/sheet/<id>", methods=["GET"])
     def get_sheet(id):
-        return jsonify(app.handler.get_data(id))
+        try:
+            return jsonify(app.handler.get_data(id))
+        except ValueError as e:
+            return {"error": str(e)}, 404
+
+    @app.route("/refresh", methods=["POST"])
+    def post_refresh():
+        app.handler.read_data()
+        return jsonify({"message": "Data refreshed"})
 
     return app
