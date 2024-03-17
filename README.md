@@ -2,6 +2,17 @@
 
 [![Tests](https://github.com/cybernop/excel-provider/actions/workflows/python-app-test.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/python-app-test.yml) [![Package](https://github.com/cybernop/excel-provider/actions/workflows/python-app-package.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/python-app-package.yml) [![PYPI](https://github.com/cybernop/excel-provider/actions/workflows/python-app-publish.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/python-app-publish.yml) [![Docker Image](https://github.com/cybernop/excel-provider/actions/workflows/docker-dev-image.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/docker-dev-image.yml) [![Docker Hub](https://github.com/cybernop/excel-provider/actions/workflows/docker-latest-image.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/docker-latest-image.yml)
 
+This is a REST service that reads data from a EXCEL file and provides them over a REST API. It can provide a data row for each sheet configured.
+
+It provides the following endpoints:
+
+* `GET /sheets`: Get a list of all available sheets and their IDs
+* `GET /sheet/<id>`: Get the data row for this sheet
+* `POST /refresh`: Reload the data from file
+* `GET /spec`: Get swagger spec of API
+
+For more information about the endpoints and their parameters, see the `/spec` endpoint.
+
 ## Usage
 
 The configuration is done using a YAML file providing the following information
