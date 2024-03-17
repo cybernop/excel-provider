@@ -1,14 +1,16 @@
 name: Package
 on:
-  workflow_run:
-    workflows: ["Tests"]
-    branches: [main]
+  push:
+    branches:
+      - main
+  pull_request:
     types:
-      - completed
+      - opened
+      - reopened
+      - synchronize
 
 jobs:
   build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -34,7 +36,6 @@ jobs:
           overwrite: true
 
   test:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     needs: build
     runs-on: ubuntu-latest
     steps:
