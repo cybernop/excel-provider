@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "excel-provider"
-version = "0.1.4a0"
+version = "0.1.5a0"
 description = ""
 authors = ["Alexander Essenwanger <cibernop@mable-anex.de>"]
 license = "MIT"
