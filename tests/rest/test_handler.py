@@ -25,7 +25,7 @@ def test_get_data():
         "Sheet1": {"Value": {1: 1, 2: 2}},
         "Sheet2": {"Name": {1: "Jane", 2: "John"}},
     }
-    handler.sheets = {"1": "Sheet1", "2": "Sheet2"}
+    handler.sheets = [{"id": "1", "name": "Sheet1"}, {"id": "2", "name": "Sheet2"}]
 
     test_data = [
         (
@@ -83,7 +83,7 @@ def test_get_data_sheet_not_found():
         "Sheet1": {"Value": {1: 1, 2: 2}},
         "Sheet2": {"Name": {1: "Jane", 2: "John"}},
     }
-    handler.sheets = {"1": "Sheet1", "2": "Sheet2"}
+    handler.sheets = [{"id": "1", "name": "Sheet1"}, {"id": "2", "name": "Sheet2"}]
 
     try:
         handler.get_data("3")
