@@ -1,6 +1,6 @@
 # Excel Provider
 
-[![Tests](https://github.com/cybernop/excel-provider/actions/workflows/python-app-test.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/python-app-test.yml) [![Package](https://github.com/cybernop/excel-provider/actions/workflows/python-app-package.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/python-app-package.yml) [![PYPI](https://github.com/cybernop/excel-provider/actions/workflows/python-app-publish.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/python-app-publish.yml)
+[![Tests](https://github.com/cybernop/excel-provider/actions/workflows/python-app-test.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/python-app-test.yml) [![Package](https://github.com/cybernop/excel-provider/actions/workflows/python-app-package.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/python-app-package.yml) [![PYPI](https://github.com/cybernop/excel-provider/actions/workflows/python-app-publish.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/python-app-publish.yml) [![Docker Image](https://github.com/cybernop/excel-provider/actions/workflows/docker-dev-image.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/docker-dev-image.yml) [![Docker Hub](https://github.com/cybernop/excel-provider/actions/workflows/docker-latest-image.yml/badge.svg)](https://github.com/cybernop/excel-provider/actions/workflows/docker-latest-image.yml)
 
 ## Usage
 
