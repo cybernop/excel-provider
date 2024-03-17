@@ -22,6 +22,18 @@ handler:
 
 While `column 1` is the data column on `sheet 1` and `column 2` on `sheet 2`.
 
+### Docker Image
+
+Run a Docker image providing the providing backend, for example
+
+```bash
+docker run \
+  -v /path/to/config:/app/config.yaml \
+  -v /path/to/data.xlsx:/app/data.xlsx \
+  -p 5000:5000 \
+  cybernop/excel-provider
+```
+
 ### Python Package
 
 Start the server from the Python package providing the config
