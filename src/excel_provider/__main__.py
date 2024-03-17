@@ -19,4 +19,4 @@ args = get_args()
 config = yaml.safe_load(args.config.read_text())
 
 app = create_app(config)
-app.run()
+app.run(**config.get("server", {}))

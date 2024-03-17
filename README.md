@@ -7,6 +7,9 @@
 The configuration is done using a YAML file providing the following information
 
 ```yaml
+server:
+  host: "0.0.0.0"
+  port: 5000
 handler:
   excel_file: path/to/file.xlsx
   sheets:
