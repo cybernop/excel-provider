@@ -60,3 +60,13 @@ _pytest_ is used for unit tests. Run all tests from the project root.
 ```bash
 pytest
 ```
+
+## Development
+
+For development, install the library as editable using pip
+
+```bash
+pip install --editable .
+```
+
+and start from the python package.
