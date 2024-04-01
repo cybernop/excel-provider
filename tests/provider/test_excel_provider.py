@@ -23,17 +23,19 @@ def test_excel_provider_initialize():
     assert isinstance(provider.config, ExcelProviderConfig)
 
     assert list(provider.data.keys()) == ["one", "two"]
+    one = provider.data["one"]
+    two = provider.data["two"]
 
-    assert provider.data["one"].name == "Sheet1"
-    assert "Value" in provider.data["one"].rows
-    assert len(provider.data["one"].rows["Value"]) == 3
-    assert date(2024, 1, 1) in provider.data["one"].rows["Value"]
-    assert provider.data["one"].rows["Value"][date(2024, 1, 1)] == 1
+    assert one.name == "Sheet1"
+    assert one.column == "Value"
+    assert len(one.rows) == 3
+    assert date(2024, 1, 1) in one.rows
+    assert one.rows[date(2024, 1, 1)] == 1
 
-    assert "Name" in provider.data["two"].rows
-    assert len(provider.data["two"].rows["Name"]) == 4
-    assert 1 in provider.data["two"].rows["Name"]
-    assert provider.data["two"].rows["Name"][1] == "Jane"
+    assert two.column == "Name"
+    assert len(two.rows) == 4
+    assert 1 in two.rows
+    assert two.rows[1] == "Jane"
 
 
 def test_excel_provider_get_series_names():
@@ -48,10 +50,10 @@ def test_excel_provider_get_series_names():
 
 def test_excel_provider_get_series():
     expected = {
+        "id": "one",
         "name": "Sheet1",
-        "rows": {
-            "Value": {date(2024, 1, 1): 1, date(2024, 1, 2): 2, date(2024, 1, 3): 3}
-        },
+        "column": "Value",
+        "rows": {date(2024, 1, 1): 1, date(2024, 1, 2): 2, date(2024, 1, 3): 3},
     }
 
     provider = ExcelProvider(CONFIG)

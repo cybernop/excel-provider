@@ -35,11 +35,12 @@ class ExcelProvider(BaseProvider):
 
             # Convert the index to string to avoid issues with JSON serialization
             sheet_result = {
-                str(k): {_convert_key(vk): kk for vk, kk in v.items()}
-                for k, v in sheet_result.items()
+                _convert_key(k): v for k, v in sheet_result[data.data_col].items()
             }
 
-            self.data[data.id] = DataSeries(data.sheet, sheet_result)
+            self.data[data.id] = DataSeries(
+                id=data.id, name=data.sheet, column=data.data_col, rows=sheet_result
+            )
 
     def get_series_names(self) -> List[Dict[str, str]]:
         return [{"id": id, "name": series.name} for id, series in self.data.items()]
