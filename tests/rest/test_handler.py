@@ -1,159 +1,102 @@
+import json
+from datetime import date
+from typing import Dict
+
+from deepdiff import DeepDiff
+
+from excel_provider.models import DataSeries
+from excel_provider.provider import BaseProvider
 from excel_provider.rest.handler import RestHandler
+
+DATA = {
+    "one": DataSeries(
+        id="one",
+        name="Sheet1",
+        column="Value",
+        rows={date(2024, 1, 1): 1, date(2024, 1, 2): 2},
+    ),
+    "two": DataSeries(
+        id="two",
+        name="Sheet2",
+        column="Name",
+        rows={1: "Jane", 2: "John"},
+    ),
+}
+
+
+class DummyProvider(BaseProvider):
+    def __init__(self, data: Dict[str, DataSeries]):
+        self.data = data
+
+    def get_series_names(self):
+        return [{"id": id, "name": series.name} for id, series in self.data.items()]
+
+    def get_series(self, series_id):
+        return self.data.get(series_id)
+
+
+def setup_handler(data):
+    provider = DummyProvider(data)
+    return RestHandler(provider)
 
 
 def test_get_sheet_names():
-    handler = RestHandler()
-    handler.sheets = {"1": "Sheet1", "2": "Sheet2"}
+    expected = {
+        "sheets": [{"id": "one", "name": "Sheet1"}, {"id": "two", "name": "Sheet2"}]
+    }
+    handler = setup_handler(DATA)
 
-    assert handler.get_sheet_names() == {"sheets": {"1": "Sheet1", "2": "Sheet2"}}
+    result = handler.get_sheet_names()
+    assert DeepDiff(expected, result) == {}
 
 
 def test_get_sheet_names_no_data():
-    handler = RestHandler()
+    expected = {"sheets": []}
+    handler = setup_handler(dict())
 
-    try:
-        handler.get_sheet_names()
-    except ValueError as e:
-        assert str(e) == "Data has not been read"
-    else:
-        assert False
+    result = handler.get_sheet_names()
+    assert DeepDiff(expected, result) == {}
 
 
 def test_get_data():
-    handler = RestHandler()
-    handler.data = {
-        "Sheet1": {"Value": {1: 1, 2: 2}},
-        "Sheet2": {"Name": {1: "Jane", 2: "John"}},
-    }
-    handler.sheets = [{"id": "1", "name": "Sheet1"}, {"id": "2", "name": "Sheet2"}]
+    handler = setup_handler(DATA)
 
-    test_data = [
+    expected = [
         (
-            "1",
+            "one",
             {
-                "id": "1",
+                "id": "one",
                 "name": "Sheet1",
-                "series": [{"name": "Value", "rows": {1: 1, 2: 2}}],
+                "column": "Value",
+                "rows": {"2024-01-01": 1, "2024-01-02": 2},
             },
         ),
         (
-            "2",
+            "two",
             {
-                "id": "2",
+                "id": "two",
                 "name": "Sheet2",
-                "series": [{"name": "Name", "rows": {1: "Jane", 2: "John"}}],
+                "column": "Name",
+                "rows": {"1": "Jane", "2": "John"},
             },
         ),
     ]
 
-    for input, expected in test_data:
-        assert handler.get_data(input) == expected
+    for input, expected_entry in expected:
+        result = handler.get_data(input)
+        result = json.loads(result)
+        assert DeepDiff(expected_entry, result) == {}
+
+
+def test_get_data_not_existing():
+    handler = setup_handler(DATA)
+
+    result = handler.get_data("three")
+    assert result is None
 
 
 def test_get_data_no_data():
-    handler = RestHandler()
-    handler.sheets = {"1": "Sheet1", "2": "Sheet2"}
+    handler = setup_handler(dict())
 
-    try:
-        handler.get_data("1")
-    except ValueError as e:
-        assert str(e) == "Data has not been read"
-    else:
-        assert False
-
-
-def test_get_data_no_sheets():
-    handler = RestHandler()
-    handler.data = {
-        "Sheet1": {"Value": {1: 1, 2: 2}},
-        "Sheet2": {"Name": {1: "Jane", 2: "John"}},
-    }
-
-    try:
-        handler.get_data("1")
-    except ValueError as e:
-        assert str(e) == "Data has not been read"
-    else:
-        assert False
-
-
-def test_get_data_sheet_not_found():
-    handler = RestHandler()
-    handler.data = {
-        "Sheet1": {"Value": {1: 1, 2: 2}},
-        "Sheet2": {"Name": {1: "Jane", 2: "John"}},
-    }
-    handler.sheets = [{"id": "1", "name": "Sheet1"}, {"id": "2", "name": "Sheet2"}]
-
-    try:
-        handler.get_data("3")
-    except ValueError as e:
-        assert str(e) == "Sheet with id 3 does not exist"
-    else:
-        assert False
-
-
-def test_config_valid():
-    handler = RestHandler(
-        handler_config={
-            "excel_file": "test.xlsx",
-            "sheets": ["Sheet1", "Sheet2"],
-            "data_cols": ["Value", "Name"],
-        }
-    )
-
-    assert handler.config_valid() == True
-
-
-def test_config_valid_no_config():
-    handler = RestHandler()
-
-    assert handler.config_valid() == False
-
-
-def test_config_valid_no_excel_file():
-    handler = RestHandler(
-        handler_config={"sheets": ["Sheet1", "Sheet2"], "data_cols": ["Value", "Name"]}
-    )
-
-    assert handler.config_valid() == False
-
-
-def test_config_valid_no_sheets():
-    handler = RestHandler(
-        handler_config={"excel_file": "test.xlsx", "data_cols": ["Value", "Name"]}
-    )
-
-    assert handler.config_valid() == False
-
-
-def test_config_valid_sheets_no_list():
-    handler = RestHandler(
-        handler_config={
-            "excel_file": "test.xlsx",
-            "data_cols": ["Value", "Name"],
-            "sheets": "Sheet1",
-        }
-    )
-
-    assert handler.config_valid() == False
-
-
-def test_config_valid_no_data_cols():
-    handler = RestHandler(
-        handler_config={"excel_file": "test.xlsx", "sheets": ["Sheet1", "Sheet2"]}
-    )
-
-    assert handler.config_valid() == False
-
-
-def test_config_valid_data_cols_no_list():
-    handler = RestHandler(
-        handler_config={
-            "excel_file": "test.xlsx",
-            "sheets": ["Sheet1", "Sheet2"],
-            "data_cols": "Value",
-        }
-    )
-
-    assert handler.config_valid() == False
+    result = handler.get_data("one")
+    assert result is None
