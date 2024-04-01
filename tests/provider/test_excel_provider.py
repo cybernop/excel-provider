@@ -37,7 +37,7 @@ def test_excel_provider_initialize():
 
 
 def test_excel_provider_get_series_names():
-    expected = {"one": "Sheet1", "two": "Sheet2"}
+    expected = [{"id": "one", "name": "Sheet1"}, {"id": "two", "name": "Sheet2"}]
 
     provider = ExcelProvider(CONFIG)
     provider.initialize()

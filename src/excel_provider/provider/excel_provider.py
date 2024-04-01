@@ -41,8 +41,8 @@ class ExcelProvider(BaseProvider):
 
             self.data[data.id] = DataSeries(data.sheet, sheet_result)
 
-    def get_series_names(self) -> Dict[str, str]:
-        return {id: series.name for id, series in self.data.items()}
+    def get_series_names(self) -> List[Dict[str, str]]:
+        return [{"id": id, "name": series.name} for id, series in self.data.items()]
 
     def get_series(self, series_id) -> DataSeries:
         return self.data.get(series_id)
