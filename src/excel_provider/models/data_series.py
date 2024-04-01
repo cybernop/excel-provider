@@ -1,33 +1,18 @@
 import json
-from datetime import date, datetime
+from datetime import date
 from typing import Dict
-
-from pandas import Timestamp
 
 
 class DataSeries:
-    def __init__(self, name: str, rows: Dict[datetime, int]):
+    def __init__(self, name: str, rows: Dict[date, int]):
         self.name = name
-        self.rows = {
-            (
-                key.date()
-                if isinstance(key, datetime) or isinstance(key, Timestamp)
-                else key
-            ): value
-            for key, value in rows.items()
-        }
-
-    def to_dict(self) -> dict:
-        return {
-            "name": self.name,
-            "rows": {
-                k.isoformat() if isinstance(k, date) else str(k): v
-                for k, v in self.rows.items()
-            },
-        }
+        self.rows = rows
 
     def to_json(self) -> str:
         return json.dumps(
-            self.to_dict(),
+            {
+                "name": self.name,
+                "rows": {k.isoformat(): v for k, v in self.rows.items()},
+            },
             sort_keys=True,
         )
