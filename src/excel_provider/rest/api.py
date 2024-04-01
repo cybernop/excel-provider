@@ -3,14 +3,19 @@ from typing import Dict
 from flask import Flask, jsonify
 from flask_swagger import swagger
 
+from excel_provider.provider import PROVIDER_TYPES
 from excel_provider.rest.handler import RestHandler
 
 
 def create_app(config: Dict):
     app = Flask(__name__)
 
-    handler = RestHandler(config.get("handler"))
-    handler.read_data()
+    provider_config = config["provider"]
+    provider_type = PROVIDER_TYPES[provider_config["type"]]
+    provider = provider_type(provider_config["config"])
+    provider.initialize()
+
+    handler = RestHandler(provider)
 
     setattr(app, "handler", handler)
 
@@ -65,26 +70,16 @@ def create_app(config: Dict):
                   type: string
                 name:
                   type: string
-                series:
-                  type: array
-                  items:
-                    $ref: '#/definitions/Series'
-              required:
-                - id
-                - name
-                - series
-          - schema:
-              id: Series
-              type: object
-              properties:
-                name:
+                column:
                   type: string
                 rows:
                   type: object
                   additionalProperties:
                     type: string
               required:
+                - id
                 - name
+                - column
                 - rows
         parameters:
           - name: id
@@ -106,10 +101,11 @@ def create_app(config: Dict):
                   type: string
 
         """
-        try:
-            return jsonify(app.handler.get_data(id))
-        except ValueError as e:
-            return {"error": str(e)}, 404
+        result = app.handler.get_data(id)
+        if result is None:
+            return "", 404
+        else:
+            return result
 
     @app.route("/refresh", methods=["POST"])
     def post_refresh():
@@ -121,7 +117,7 @@ def create_app(config: Dict):
           200:
             description: Data refreshed
         """
-        app.handler.read_data()
+        provider.initialize()
         return jsonify({"message": "Data refreshed"})
 
     @app.route("/spec")
